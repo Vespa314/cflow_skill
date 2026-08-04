@@ -1,0 +1,4 @@
+interface:
+  display_name: "cflow Skill"
+  short_description: "Operate cflow notes, tags, search, and kanban via Agent APIs"
+  default_prompt: "Use $cflow_skill to create, update, search, or organize cflow notes and kanban boards."
