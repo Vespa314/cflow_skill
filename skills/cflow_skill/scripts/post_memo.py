@@ -2,12 +2,10 @@
 """发表memo"""
 import argparse
 import json
-import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
@@ -17,13 +15,9 @@ def main():
     parser.add_argument("--spaceId", default="", help="空间ID")
     args = parser.parse_args()
 
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
+    token = load_token()
     content = args.content.replace("\\n", "\n")
-    resp = requests.post(f"{BASE_URL}/post_memo", headers={"Authorization": f"Bearer {token}"},
+    resp = requests.post(f"{base_url()}/post_memo", headers=auth_headers(token),
         json={"content": content, "title": args.title, "spaceId": args.spaceId})
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 

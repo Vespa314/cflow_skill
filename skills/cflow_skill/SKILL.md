@@ -1,16 +1,29 @@
 ---
 name: cflow_skill
 description: 当用户在 cflow/笔记系统中执行笔记操作时（创建、修改、查询、上传附件、查标签、搜索、看板操作），可以使用该技能。
-metadata:
-  openclaw:
-    emoji: "📝"
-    primaryEnv: CFLOW_TOKEN
-    requires:
-      env:
-        - CFLOW_TOKEN
 ---
 
-使用前如果没有配置 `CFLOW_TOKEN`，需要提醒用户去「设置 - 我的账号」处创建一个用途为 Agent 的 Access token。
+## 配置 Token（首次使用必读）
+
+所有工具脚本都通过 `scripts/_auth.py` 统一从本地文件 `scripts/.auth/token` 读取 `CFLOW_TOKEN`。
+
+去 cflow 「设置 - 我的账号」创建一个用途为 **Agent** 的 Access Token，然后任选其一写入：
+
+```bash
+# 交互式（推荐）
+python3 scripts/setup_token.py
+
+# 直接传入
+python3 scripts/setup_token.py --token "你的token"
+
+# 查看是否已配置（脱敏显示）
+python3 scripts/setup_token.py --show
+
+# 切换用户 / 清除
+python3 scripts/setup_token.py --clear
+```
+
+配置一次后所有脚本自动读取。**未配置时调用任何工具都会失败并打印上述指引。**
 
 注意事项：
 - 批量请求务必控制频率，至少间隔 3 秒一次。

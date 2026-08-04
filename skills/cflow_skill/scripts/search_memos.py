@@ -2,12 +2,10 @@
 """搜索笔记"""
 import argparse
 import json
-import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
@@ -18,12 +16,8 @@ def main():
     parser.add_argument("--pagesize", type=int, default=20, help="每页数量，最大100，默认20")
     args = parser.parse_args()
 
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
-    resp = requests.post(f"{BASE_URL}/search_memos", headers={"Authorization": f"Bearer {token}"},
+    token = load_token()
+    resp = requests.post(f"{base_url()}/search_memos", headers=auth_headers(token),
         json={"query": args.query, "space_id": args.space_id, "page": args.page, "pagesize": args.pagesize})
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 

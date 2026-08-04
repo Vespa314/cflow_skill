@@ -2,12 +2,10 @@
 """创建看板分组"""
 import argparse
 import json
-import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
@@ -16,12 +14,8 @@ def main():
     parser.add_argument("--groupName", required=True, help="分组名称")
     args = parser.parse_args()
 
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
-    resp = requests.post(f"{BASE_URL}/kanban_create_group", headers={"Authorization": f"Bearer {token}"}, json={"kanban_id": args.kanban_id, "groupName": args.groupName})
+    token = load_token()
+    resp = requests.post(f"{base_url()}/kanban_create_group", headers=auth_headers(token), json={"kanban_id": args.kanban_id, "groupName": args.groupName})
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 
 

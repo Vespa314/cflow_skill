@@ -2,12 +2,10 @@
 """获取看板 schema"""
 import argparse
 import json
-import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
@@ -15,12 +13,8 @@ def main():
     parser.add_argument("--kanban_id", required=True, help="看板ID")
     args = parser.parse_args()
 
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
-    resp = requests.get(f"{BASE_URL}/kanban_schema", headers={"Authorization": f"Bearer {token}"}, params={"kanban_id": args.kanban_id})
+    token = load_token()
+    resp = requests.get(f"{base_url()}/kanban_schema", headers=auth_headers(token), params={"kanban_id": args.kanban_id})
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 
 

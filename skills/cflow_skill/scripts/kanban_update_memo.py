@@ -2,12 +2,10 @@
 """更新看板中的备忘录"""
 import argparse
 import json
-import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
@@ -23,11 +21,7 @@ def main():
     parser.add_argument("--isWatching", default=None, help="是否关注 true/false")
     args = parser.parse_args()
 
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
+    token = load_token()
     data = {"kanban_id": args.kanban_id, "memo_id": args.memo_id}
     if args.groupId is not None:
         data["groupId"] = int(args.groupId)
@@ -44,7 +38,7 @@ def main():
     if args.isWatching is not None:
         data["isWatching"] = args.isWatching.lower() == "true"
 
-    resp = requests.post(f"{BASE_URL}/kanban_update_memo", headers={"Authorization": f"Bearer {token}"}, json=data)
+    resp = requests.post(f"{base_url()}/kanban_update_memo", headers=auth_headers(token), json=data)
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 
 

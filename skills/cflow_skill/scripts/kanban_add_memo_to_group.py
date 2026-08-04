@@ -2,12 +2,10 @@
 """添加备忘录到看板分组"""
 import argparse
 import json
-import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
@@ -19,18 +17,14 @@ def main():
     parser.add_argument("--groupSrc", required=False, help="添加到分组的原因,除非特别说明,否则不要填")
     args = parser.parse_args()
 
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
+    token = load_token()
     memo_ids = [int(x.strip()) for x in args.memoIds.split(",")]
     payload = {"kanban_id": args.kanban_id, "group_id": args.group_id, "memoIds": memo_ids}
     if args.kanbanSrc:
         payload["kanbanSrc"] = args.kanbanSrc
     if args.groupSrc:
         payload["groupSrc"] = args.groupSrc
-    resp = requests.post(f"{BASE_URL}/kanban_add_memo_to_group", headers={"Authorization": f"Bearer {token}"}, json=payload)
+    resp = requests.post(f"{base_url()}/kanban_add_memo_to_group", headers=auth_headers(token), json=payload)
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 
 

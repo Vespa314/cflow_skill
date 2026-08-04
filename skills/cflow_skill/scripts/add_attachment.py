@@ -3,11 +3,10 @@
 import argparse
 import json
 import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
@@ -17,13 +16,9 @@ def main():
     parser.add_argument("--content_type", required=True, help="文件MIME类型，如 text/plain, image/png, application/pdf")
     args = parser.parse_args()
 
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
+    token = load_token()
     with open(args.file, "rb") as f:
-        resp = requests.post(f"{BASE_URL}/add_attachment", headers={"Authorization": f"Bearer {token}"},
+        resp = requests.post(f"{base_url()}/add_attachment", headers=auth_headers(token),
             files={"file": (os.path.basename(args.file), f, args.content_type)},
             data={"memo_id": args.memo_id})
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))

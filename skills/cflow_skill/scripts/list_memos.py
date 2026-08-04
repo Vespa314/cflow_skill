@@ -2,12 +2,10 @@
 """分页列出笔记"""
 import argparse
 import json
-import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
@@ -17,14 +15,10 @@ def main():
     parser.add_argument("--spaceId", default="", help="空间ID，不填则为默认空间")
     args = parser.parse_args()
 
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
+    token = load_token()
     resp = requests.get(
-        f"{BASE_URL}/list_memos",
-        headers={"Authorization": f"Bearer {token}"},
+        f"{base_url()}/list_memos",
+        headers=auth_headers(token),
         params={"offset": args.offset, "limit": args.limit, "spaceId": args.spaceId},
     )
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))

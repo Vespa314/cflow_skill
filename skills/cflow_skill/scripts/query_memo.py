@@ -2,12 +2,10 @@
 """查询一个memo"""
 import argparse
 import json
-import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
@@ -15,12 +13,8 @@ def main():
     parser.add_argument("--memo_id", required=True, help="memo ID")
     args = parser.parse_args()
 
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
-    resp = requests.get(f"{BASE_URL}/query_memo", headers={"Authorization": f"Bearer {token}"},
+    token = load_token()
+    resp = requests.get(f"{base_url()}/query_memo", headers=auth_headers(token),
         params={"memo_id": args.memo_id})
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 

@@ -2,12 +2,10 @@
 """拉取tag"""
 import argparse
 import json
-import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
@@ -15,12 +13,8 @@ def main():
     parser.add_argument("--space_id", default="", help="空间ID，默认为空")
     args = parser.parse_args()
 
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
-    resp = requests.post(f"{BASE_URL}/fetch_tags", headers={"Authorization": f"Bearer {token}"},
+    token = load_token()
+    resp = requests.post(f"{base_url()}/fetch_tags", headers=auth_headers(token),
         json={"space_id": args.space_id})
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 

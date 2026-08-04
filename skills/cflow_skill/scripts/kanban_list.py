@@ -1,21 +1,15 @@
 #!/usr/bin/env python3
 """获取看板列表"""
 import json
-import os
-import sys
 
 import requests
 
-BASE_URL = os.environ.get("CFLOW_BASE_URL", "https://api.cflow.cc/v2/agent")
+from _auth import auth_headers, base_url, load_token
 
 
 def main():
-    token = os.environ.get("CFLOW_TOKEN")
-    if not token:
-        print("错误: 请设置环境变量 CFLOW_TOKEN", file=sys.stderr)
-        sys.exit(1)
-
-    resp = requests.get(f"{BASE_URL}/kanban_list", headers={"Authorization": f"Bearer {token}"})
+    token = load_token()
+    resp = requests.get(f"{base_url()}/kanban_list", headers=auth_headers(token))
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 
 
