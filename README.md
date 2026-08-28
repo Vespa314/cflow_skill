@@ -1,6 +1,6 @@
 # cflow_skill
 
-用 Agent 操作 [cflow](https://cflow.cc) 笔记：创建 / 修改 / 查询 / 搜索 / 标签 / 附件 / 看板。
+用 Agent 操作 [cflow](https://cflow.cc) 笔记：创建 / 修改 / 查询 / 搜索 / 标签 / 附件 / 评论 / 看板。
 
 ## Install
 
@@ -18,7 +18,7 @@ npx skills add Vespa314/cflow_skill --skill cflow_skill
 
 - Python 3
 - `pip install requests`（脚本依赖）
-- 环境变量 `CFLOW_TOKEN`：在 cflow「设置 → 我的账号」创建用途为 Agent 的 Access token
+- Access Token（用途为 Agent）：在 cflow「设置 → 我的账号」创建，然后 `python3 scripts/setup_token.py --token "你的token"` 写入本地（存于 `scripts/.auth/token`，已被 gitignore）
 
 可选：
 
@@ -33,12 +33,13 @@ export CFLOW_BASE_URL=https://api.cflow.cc/v2/agent   # 默认即此
 - 空间与标签：`list_space`、`fetch_tags`
 - 笔记 CRUD / 附件：`post_memo`、`update_memo`、`query_memo`、`list_memos`、`add_attachment`
 - 搜索：`search_memos`（语法搜索）、`query_topic_memos`（语义搜索）
+- 评论：`create_comment`（发表 / 回复）、`list_comments`（拉取笔记评论）
 - 看板：列表、创建、详情、分组、加减笔记等
 
 ## How It Works
 
 1. 在 Skill 根目录执行 `python3 scripts/<tool>.py ...`
-2. 脚本读取 `CFLOW_TOKEN`，请求 cflow Agent API
+2. 脚本从 `scripts/.auth/token` 读取 `CFLOW_TOKEN`，请求 cflow Agent API
 3. 批量调用请至少间隔 3 秒
 
 详细参数与选用策略见 `skills/cflow_skill/SKILL.md`。
@@ -48,6 +49,7 @@ export CFLOW_BASE_URL=https://api.cflow.cc/v2/agent   # 默认即此
 - 「列出我有哪些空间」
 - 「用标签 #工作 搜索笔记」
 - 「写一条笔记到 work 空间，标题为周报」
+- 「看下笔记 130 有哪些评论，帮我回复一条」
 - 「把笔记 130 加到看板 1 的分组 2」
 
 ## Safety / Limitations

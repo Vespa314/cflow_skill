@@ -1,6 +1,6 @@
 # cflow_skill
 
-面向 [cflow](https://cflow.cc) 的 Agent Skill：笔记、标签、搜索、附件与看板操作。
+面向 [cflow](https://cflow.cc) 的 Agent Skill：笔记、标签、搜索、附件、评论与看板操作。
 
 ## 安装
 
@@ -11,7 +11,7 @@ npx skills add Vespa314/cflow_skill
 ## 依赖
 
 - Python 3 + `requests`
-- 环境变量 `CFLOW_TOKEN`（cflow「设置 → 我的账号」→ Agent Access token）
+- Access Token（用途为 Agent）：cflow「设置 → 我的账号」创建，用 `python3 scripts/setup_token.py --token "你的token"` 写入本地
 
 ## 用法
 

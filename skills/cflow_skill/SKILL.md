@@ -1,6 +1,6 @@
 ---
 name: cflow_skill
-description: 当用户在 cflow/笔记系统中执行笔记操作时（创建、修改、查询、上传附件、查标签、搜索、看板操作），可以使用该技能。
+description: 当用户在 cflow/笔记系统中执行笔记操作时（创建、修改、查询、上传附件、查标签、搜索、评论、看板操作），可以使用该技能。
 ---
 
 ## 配置 Token（首次使用必读）
@@ -43,12 +43,14 @@ python3 scripts/setup_token.py --clear
 | 写笔记前需要已有标签 | 先 `fetch_tags`，再把合适标签写进 content |
 | 创建笔记 | `post_memo`；需要附件再 `add_attachment` |
 | 改内容 / 标题 / 置顶 | `update_memo` |
+| 评论 / 回复评论 | `list_comments` 看已有评论，`create_comment` 发表 |
 | 看板相关 | 先 `kanban_list`，再按需 `kanban_detail` / `kanban_schema` 等 |
 
 常见流程：
 1. 写笔记：`list_space`（如需）→ `fetch_tags`（如需标签）→ `post_memo` →（可选）`add_attachment`
 2. 找笔记：能精确匹配用 `search_memos`，否则用 `query_topic_memos`
-3. 看板：`kanban_list` → `kanban_detail` / `kanban_schema` → 增删改笔记
+3. 评论 / 回复：`query_memo` 找到笔记 → `list_comments` 看已有评论 → `create_comment`（回复时带 `--parent_comment_id`）
+4. 看板：`kanban_list` → `kanban_detail` / `kanban_schema` → 增删改笔记
 
 笔记内容格式见 ./references/markdown.md。标签必须写在 content 里（如 `#工作`），不要发明用户从未用过的标签（先 `fetch_tags`）。
 
@@ -117,6 +119,33 @@ python3 scripts/add_attachment.py --memo_id 130 --file /path/to/file.pdf --conte
 | --memo_id | 是 | 笔记 ID |
 | --file | 是 | 本地文件路径 |
 | --content_type | 是 | MIME 类型，如 `text/plain`、`image/png`、`application/pdf` |
+
+### create_comment - 发表评论
+
+```bash
+python3 scripts/create_comment.py --memo_id 130 --content "评论内容"
+python3 scripts/create_comment.py --memo_id 130 --content "回复内容" --parent_comment_id 12
+```
+
+| 参数 | 必填 | 说明 |
+|------|------|------|
+| --memo_id | 是 | 笔记 ID |
+| --content | 是 | 评论内容，换行用 `\n` |
+| --parent_comment_id | 否 | 回复某条评论时传该评论的 ID，不填则为普通评论 |
+
+回复评论前先用 `list_comments` 拿到目标评论的 `commentId`。私密笔记无法评论。
+
+### list_comments - 拉取笔记的评论
+
+```bash
+python3 scripts/list_comments.py --memo_id 130
+```
+
+| 参数 | 必填 | 说明 |
+|------|------|------|
+| --memo_id | 是 | 笔记 ID |
+
+返回该笔记全部评论，含 `commentId`、`content`、`parentCommentId`（回复目标）、`createdBy`（`user` 用户 / `ai` 助手）、创建时间。私密笔记无法查看。
 
 ### query_memo - 查询单个笔记
 
