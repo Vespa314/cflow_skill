@@ -1,6 +1,6 @@
 # cflow_skill
 
-面向 [cflow](https://cflow.cc) 的 Agent Skill：笔记、标签、搜索、附件、评论与看板操作。
+面向 [cflow](https://cflow.cc) 的 Agent Skill：笔记、标签、搜索、附件（上传 / 下载）、评论与看板操作。
 
 ## 安装
 

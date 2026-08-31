@@ -31,7 +31,7 @@ export CFLOW_BASE_URL=https://api.cflow.cc/v2/agent   # 默认即此
 安装后，Agent 可通过本 Skill 的 `scripts/` 调用 cflow Agent API，覆盖：
 
 - 空间与标签：`list_space`、`fetch_tags`
-- 笔记 CRUD / 附件：`post_memo`、`update_memo`、`query_memo`、`list_memos`、`add_attachment`
+- 笔记 CRUD / 附件：`post_memo`、`update_memo`、`query_memo`、`list_memos`、`add_attachment`、`download_attachment`
 - 搜索：`search_memos`（语法搜索）、`query_topic_memos`（语义搜索）
 - 评论：`create_comment`（发表 / 回复）、`list_comments`（拉取笔记评论）
 - 看板：列表、创建、详情、分组、加减笔记等
@@ -50,6 +50,7 @@ export CFLOW_BASE_URL=https://api.cflow.cc/v2/agent   # 默认即此
 - 「用标签 #工作 搜索笔记」
 - 「写一条笔记到 work 空间，标题为周报」
 - 「看下笔记 130 有哪些评论，帮我回复一条」
+- 「把笔记 130 的附件下载到 /tmp」
 - 「把笔记 130 加到看板 1 的分组 2」
 
 ## Safety / Limitations

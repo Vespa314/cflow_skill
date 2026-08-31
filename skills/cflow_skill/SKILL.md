@@ -42,6 +42,7 @@ python3 scripts/setup_token.py --clear
 | 已知笔记 ID，看全文 | `query_memo` |
 | 写笔记前需要已有标签 | 先 `fetch_tags`，再把合适标签写进 content |
 | 创建笔记 | `post_memo`；需要附件再 `add_attachment` |
+| 下载笔记附件到本地 | `download_attachment` |
 | 改内容 / 标题 / 置顶 | `update_memo` |
 | 评论 / 回复评论 | `list_comments` 看已有评论，`create_comment` 发表 |
 | 看板相关 | 先 `kanban_list`，再按需 `kanban_detail` / `kanban_schema` 等 |
@@ -111,14 +112,27 @@ python3 scripts/fetch_tags.py --space_id "work"
 ### add_attachment - 为笔记增加附件（追加到已有后面）
 
 ```bash
-python3 scripts/add_attachment.py --memo_id 130 --file /path/to/file.pdf --content_type application/pdf
+python3 scripts/add_attachment.py --memo_id 130 --file /path/to/file.pdf
 ```
 
 | 参数 | 必填 | 说明 |
 |------|------|------|
 | --memo_id | 是 | 笔记 ID |
 | --file | 是 | 本地文件路径 |
-| --content_type | 是 | MIME 类型，如 `text/plain`、`image/png`、`application/pdf` |
+
+### download_attachment - 下载笔记附件到本地
+
+```bash
+python3 scripts/download_attachment.py --attachment_id 456 --dir /tmp
+```
+
+| 参数 | 必填 | 说明 |
+|------|------|------|
+| --attachment_id | 是 | 附件 ID，即笔记 `resourceList` 里的 `id`（`query_memo` 可查到） |
+| --dir | 否 | 保存目录，默认当前目录，不存在会自动创建 |
+| --filename | 否 | 保存文件名，默认用附件原文件名 |
+
+返回本地保存路径、文件大小等。私密笔记的附件无法下载。
 
 ### create_comment - 发表评论
 
