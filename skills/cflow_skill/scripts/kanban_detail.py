@@ -4,7 +4,6 @@ import argparse
 import json
 
 import requests
-
 from _auth import auth_headers, base_url, load_token
 
 

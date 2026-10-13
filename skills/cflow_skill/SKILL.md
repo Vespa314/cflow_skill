@@ -1,6 +1,6 @@
 ---
 name: cflow_skill
-description: 当用户在 cflow/笔记系统中执行笔记操作时（创建、修改、查询、上传附件、查标签、搜索、评论、看板操作），可以使用该技能。
+description: 当用户在 cflow/笔记系统中执行笔记操作时（创建、修改、查询、上传附件、查标签、搜索、评论、时间胶囊、看板操作），可以使用该技能。
 ---
 
 ## 配置 Token（首次使用必读）
@@ -45,6 +45,7 @@ python3 scripts/setup_token.py --clear
 | 下载笔记附件到本地 | `download_attachment` |
 | 改内容 / 标题 / 置顶 | `update_memo` |
 | 评论 / 回复评论 | `list_comments` 看已有评论，`create_comment` 发表 |
+| 时间胶囊 | `list_time_capsule` 看列表；已送达的用 `query_time_capsule` 看全文 |
 | 看板相关 | 先 `kanban_list`，再按需 `kanban_detail` / `kanban_schema` 等 |
 
 常见流程：
@@ -215,6 +216,26 @@ python3 scripts/search_memos.py --query "#微信读书" --page 0 --pagesize 20
 | --pagesize | 否 | 每页数量，最大 100，默认 20 |
 
 返回顺序为笔记 ID 越大越靠前。调用前请阅读搜索语法文件。
+
+### list_time_capsule - 列出时间胶囊
+
+```bash
+python3 scripts/list_time_capsule.py
+```
+
+返回当前用户的全部时间胶囊。`state` 为 `unread` 的尚未送达，`memoId` / `content` / `message` / `sendAt` 会显示为 `***`。`sent` 为已送达，列表里即可看到正文。
+
+### query_time_capsule - 查看单个时间胶囊
+
+```bash
+python3 scripts/query_time_capsule.py --time_capsule_id 12
+```
+
+| 参数 | 必填 | 说明 |
+|------|------|------|
+| --time_capsule_id | 是 | 时间胶囊 ID，来自 `list_time_capsule` 的 `timeCapsuleId` |
+
+只用于已送达（`sent`）的胶囊，返回封存的笔记正文、留言和发送时间。尚未送达的会拒绝查看。
 
 ---
 
