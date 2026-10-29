@@ -36,6 +36,7 @@ export CFLOW_BASE_URL=https://api.cflow.cc/v2/agent   # 默认即此
 - 评论：`create_comment`（发表 / 回复）、`list_comments`（拉取笔记评论）
 - 时间胶囊：`list_time_capsule`（列表）、`query_time_capsule`（查看已送达的单个胶囊）
 - 看板：列表、创建、详情、分组、加减笔记等
+- 数据库附件：`exec_db`（对 SQLite 数据库附件执行 SQL：查询 / 建表 / 增删改）
 
 ## How It Works
 

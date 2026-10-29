@@ -43,6 +43,7 @@ python3 scripts/setup_token.py --clear
 | 写笔记前需要已有标签 | 先 `fetch_tags`，再把合适标签写进 content |
 | 创建笔记 | `post_memo`；需要附件再 `add_attachment` |
 | 下载笔记附件到本地 | `download_attachment` |
+| 操作 cflow 数据库附件（SQL 查询/建表/增删改） | `exec_db` |
 | 改内容 / 标题 / 置顶 | `update_memo` |
 | 评论 / 回复评论 | `list_comments` 看已有评论，`create_comment` 发表 |
 | 时间胶囊 | `list_time_capsule` 看列表；已送达的用 `query_time_capsule` 看全文 |
@@ -134,6 +135,22 @@ python3 scripts/download_attachment.py --attachment_id 456 --dir /tmp
 | --filename | 否 | 保存文件名，默认用附件原文件名 |
 
 返回本地保存路径、文件大小等。私密笔记的附件无法下载。
+
+### exec_db - 对 cflow 数据库附件执行 SQL
+
+```bash
+python3 scripts/exec_db.py --attachment_id 456 --sql "SELECT * FROM bills LIMIT 20"
+```
+
+| 参数 | 必填 | 说明 |
+|------|------|------|
+| --attachment_id | 是 | cflow 数据库附件 ID，即笔记 `resourceList` 里的 `id` |
+| --sql | 是 | SQL 文本（SQLite 方言），多条语句用 `;` 分隔，整批一个事务 |
+
+- 支持建表/删表/增删改查/索引/视图/JOIN/CTE 等；`DESC 表名` 简写可用；表结构用 `SELECT sql FROM sqlite_master WHERE type='table'` 查看
+- 成功时 `results` 只含**最后一条语句**的结果（查询带 `columns`/`rows`，变更带 `affected`）；`writeCount` 为本批写操作语句条数
+- 任一语句失败整批回滚，返回 400 且带 `statementIndex`（失败语句序号，从 0 开始）
+- 写操作限频：每 5 秒最多 1 次（429 时按 `msg` 提示等待）
 
 ### create_comment - 发表评论
 
