@@ -42,6 +42,7 @@ python3 scripts/setup_token.py --clear
 | 已知笔记 ID，看全文 | `query_memo` |
 | 写笔记前需要已有标签 | 先 `fetch_tags`，再把合适标签写进 content |
 | 创建笔记 | `post_memo`；需要附件再 `add_attachment` |
+| 更新已有附件 | `update_attachment` |
 | 下载笔记附件到本地 | `download_attachment` |
 | 给笔记配 cflow 数据库 | `create_cflow_db`；之后可用 `exec_db` 执行 SQL |
 | 操作 cflow 数据库附件（SQL 查询/建表/增删改） | `exec_db` |
@@ -122,6 +123,19 @@ python3 scripts/add_attachment.py --memo_id 130 --file /path/to/file.pdf
 |------|------|------|
 | --memo_id | 是 | 笔记 ID |
 | --file | 是 | 本地文件路径 |
+
+### update_attachment - 覆盖更新已有附件
+
+```bash
+python3 scripts/update_attachment.py --attachment_id 456 --file /path/to/new.pdf
+```
+
+| 参数 | 必填 | 说明 |
+|------|------|------|
+| --attachment_id | 是 | 目标附件 ID，即笔记 `resourceList` 里的 `id` |
+| --file | 是 | 新文件的本地路径 |
+
+只更新附件内容与大小，文件名、类型、挂载关系保持不变（本地文件名无需与线上一致）。**仅支持普通附件**（PDF/图片/音视频/Office/文本等）；内置类型附件（脑图、甘特图、diagram、drawio、excalidraw、MD 幻灯、cflow 数据库）不支持覆盖更新，其中 cflow 数据库只能用 `exec_db` 执行 SQL 修改。私密笔记的附件无法更新。
 
 ### download_attachment - 下载笔记附件到本地
 
