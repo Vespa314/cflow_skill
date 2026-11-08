@@ -4,7 +4,7 @@ import argparse
 import json
 import sys
 
-import requests
+from _throttle import post
 
 from _auth import auth_headers, base_url, load_token
 
@@ -29,7 +29,7 @@ def main():
         print("错误: --content、--title 和 --pin 不能同时为空", file=sys.stderr)
         sys.exit(1)
 
-    resp = requests.post(f"{base_url()}/update_memo", headers=auth_headers(token), json=data)
+    resp = post(f"{base_url()}/update_memo", headers=auth_headers(token), json=data)
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 
 

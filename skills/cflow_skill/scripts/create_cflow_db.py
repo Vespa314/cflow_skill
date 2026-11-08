@@ -4,7 +4,7 @@ import argparse
 import json
 import sys
 
-import requests
+from _throttle import post
 from _auth import auth_headers, base_url, load_token
 
 
@@ -15,7 +15,7 @@ def main():
     args = parser.parse_args()
 
     token = load_token()
-    resp = requests.post(f"{base_url()}/create_cflow_db", headers=auth_headers(token),
+    resp = post(f"{base_url()}/create_cflow_db", headers=auth_headers(token),
         json={"memo_id": args.memo_id, "filename": args.filename}, timeout=120)
     try:
         result = resp.json()

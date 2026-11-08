@@ -3,7 +3,7 @@
 import argparse
 import json
 
-import requests
+from _throttle import post
 
 from _auth import auth_headers, base_url, load_token
 
@@ -17,7 +17,7 @@ def main():
     args = parser.parse_args()
 
     token = load_token()
-    resp = requests.post(f"{base_url()}/search_memos", headers=auth_headers(token),
+    resp = post(f"{base_url()}/search_memos", headers=auth_headers(token),
         json={"query": args.query, "space_id": args.space_id, "page": args.page, "pagesize": args.pagesize})
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 

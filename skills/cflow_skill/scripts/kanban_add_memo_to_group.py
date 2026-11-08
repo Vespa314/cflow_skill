@@ -3,7 +3,7 @@
 import argparse
 import json
 
-import requests
+from _throttle import post
 
 from _auth import auth_headers, base_url, load_token
 
@@ -24,7 +24,7 @@ def main():
         payload["kanbanSrc"] = args.kanbanSrc
     if args.groupSrc:
         payload["groupSrc"] = args.groupSrc
-    resp = requests.post(f"{base_url()}/kanban_add_memo_to_group", headers=auth_headers(token), json=payload)
+    resp = post(f"{base_url()}/kanban_add_memo_to_group", headers=auth_headers(token), json=payload)
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 
 

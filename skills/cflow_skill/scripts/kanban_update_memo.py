@@ -3,7 +3,7 @@
 import argparse
 import json
 
-import requests
+from _throttle import post
 
 from _auth import auth_headers, base_url, load_token
 
@@ -38,7 +38,7 @@ def main():
     if args.isWatching is not None:
         data["isWatching"] = args.isWatching.lower() == "true"
 
-    resp = requests.post(f"{base_url()}/kanban_update_memo", headers=auth_headers(token), json=data)
+    resp = post(f"{base_url()}/kanban_update_memo", headers=auth_headers(token), json=data)
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 
 

@@ -3,7 +3,7 @@
 import argparse
 import json
 
-import requests
+from _throttle import get
 
 from _auth import auth_headers, base_url, load_token
 
@@ -14,7 +14,7 @@ def main():
     args = parser.parse_args()
 
     token = load_token()
-    resp = requests.get(f"{base_url()}/kanban_schema", headers=auth_headers(token), params={"kanban_id": args.kanban_id})
+    resp = get(f"{base_url()}/kanban_schema", headers=auth_headers(token), params={"kanban_id": args.kanban_id})
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 
 

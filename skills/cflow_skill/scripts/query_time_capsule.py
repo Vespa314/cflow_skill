@@ -3,7 +3,7 @@
 import argparse
 import json
 
-import requests
+from _throttle import get
 
 from _auth import auth_headers, base_url, load_token
 
@@ -14,7 +14,7 @@ def main():
     args = parser.parse_args()
 
     token = load_token()
-    resp = requests.get(
+    resp = get(
         f"{base_url()}/query_time_capsule",
         headers=auth_headers(token),
         params={"time_capsule_id": args.time_capsule_id},

@@ -7,6 +7,7 @@ import sys
 
 import requests
 from _auth import auth_headers, base_url, load_token
+from _throttle import post
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
     args = parser.parse_args()
 
     token = load_token()
-    resp = requests.post(f"{base_url()}/get_attachment", headers=auth_headers(token),
+    resp = post(f"{base_url()}/get_attachment", headers=auth_headers(token),
         json={"attachment_id": args.attachment_id})
     if resp.status_code != 200:
         try:

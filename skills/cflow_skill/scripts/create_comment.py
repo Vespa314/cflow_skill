@@ -3,7 +3,7 @@
 import argparse
 import json
 
-import requests
+from _throttle import post
 
 from _auth import auth_headers, base_url, load_token
 
@@ -22,7 +22,7 @@ def main():
     }
     if args.parent_comment_id is not None:
         data["parent_comment_id"] = args.parent_comment_id
-    resp = requests.post(f"{base_url()}/create_comment", headers=auth_headers(token), json=data)
+    resp = post(f"{base_url()}/create_comment", headers=auth_headers(token), json=data)
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))
 
 

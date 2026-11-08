@@ -4,7 +4,7 @@ import argparse
 import json
 import os
 
-import requests
+from _throttle import post
 
 from _auth import auth_headers, base_url, load_token
 
@@ -17,7 +17,7 @@ def main():
 
     token = load_token()
     with open(args.file, "rb") as f:
-        resp = requests.post(f"{base_url()}/add_attachment", headers=auth_headers(token),
+        resp = post(f"{base_url()}/add_attachment", headers=auth_headers(token),
             files={"file": (os.path.basename(args.file), f)},
             data={"memo_id": args.memo_id})
     print(json.dumps(resp.json(), ensure_ascii=False, indent=2))

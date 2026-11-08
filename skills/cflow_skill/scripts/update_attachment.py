@@ -5,7 +5,7 @@ import json
 import os
 import sys
 
-import requests
+from _throttle import post
 
 from _auth import auth_headers, base_url, load_token
 
@@ -18,7 +18,7 @@ def main():
 
     token = load_token()
     with open(args.file, "rb") as f:
-        resp = requests.post(f"{base_url()}/update_attachment", headers=auth_headers(token),
+        resp = post(f"{base_url()}/update_attachment", headers=auth_headers(token),
             files={"file": (os.path.basename(args.file), f)},
             data={"attachment_id": args.attachment_id}, timeout=120)
     try:
