@@ -42,7 +42,7 @@ export CFLOW_BASE_URL=https://api.cflow.cc/v2/agent   # 默认即此
 
 1. 在 Skill 根目录执行 `python3 scripts/<tool>.py ...`
 2. 脚本从 `scripts/.auth/token` 读取 `CFLOW_TOKEN`，请求 cflow Agent API
-3. 内置自动频控：5 req/s + 30 req/min 滚动窗口，超限自动等待（无需手动间隔）
+3. 内置自动频控：5 req/s + 30 req/min 滚动窗口，DB 写入口（`exec_db` / `create_cflow_db`）叠加 1 req/s 桶，超限自动等待、429 按 Retry-After 退避（无需手动间隔）
 
 详细参数与选用策略见 `skills/cflow_skill/SKILL.md`。
 
